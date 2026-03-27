@@ -1,4 +1,4 @@
-FROM python:3.10
+FROM python:3.10-bookworm
 
 COPY ./requirements.txt /requirements.txt
 RUN apt-get update && \

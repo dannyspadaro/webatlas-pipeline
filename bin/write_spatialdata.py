@@ -59,11 +59,13 @@ def write_spatialdata(
     else:
         raise SystemError("Path to AnnData not .h5ad nor .zarr")
 
+    # ensure index and column match
     OBS_IDX_NAME = "webatlas_index"
-    adata.obs = adata.obs.reset_index(names=OBS_IDX_NAME).set_index(
-        OBS_IDX_NAME, drop=False
-    )  # have index as both index and column
+    adata.obs = adata.obs.reset_index(names=OBS_IDX_NAME)
     adata.obs[OBS_IDX_NAME] = adata.obs[OBS_IDX_NAME].astype(int)
+    adata.obs = adata.obs.set_index(OBS_IDX_NAME, drop=False)
+    adata.obs.index = adata.obs[OBS_IDX_NAME]
+    adata.obs.index.name = OBS_IDX_NAME
 
     # ensure library_id in obs
     if "library_id" not in adata.obs:
@@ -84,12 +86,12 @@ def write_spatialdata(
     if isinstance(raw_img_path, str):
         raw_img_path = [raw_img_path]
     for raw_img in raw_img_path:
-        sdata.add_image("raw", read_image(raw_img))
+        sdata.images["raw"] = read_image(raw_img) # adjusted syntax to comply with updated spatialdata version
 
     if isinstance(label_img_path, str):
         label_img_path = [label_img_path]
     for label_img in label_img_path:
-        sdata.add_labels("label", read_image(label_img, is_label=True))
+        sdata.labels["label"] = read_image(label_img, is_label=True) # adjusted syntax to comply with updated spatialdata version
 
     zarr_file = f"{stem}-spatialdata.zarr"
     sdata.write(zarr_file)
