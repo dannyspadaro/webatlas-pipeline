@@ -1,6 +1,6 @@
 FROM python:3.10-bookworm
 ARG BIOFORMATS2RAW="0.7.0"
-ARG WEBATLAS_FORK_TAG="0.5.3-galaxy2"
+ARG WEBATLAS_FORK_TAG="0.5.3-galaxy3"
 
 COPY ./requirements.txt /requirements.txt
 RUN apt-get update && \
@@ -16,7 +16,7 @@ RUN wget https://github.com/dannyspadaro/webatlas-pipeline/archive/refs/tags/${W
     tar -xf ${WEBATLAS_FORK_TAG}.tar.gz && \
     cp -r webatlas-pipeline-${WEBATLAS_FORK_TAG}/bin/* /usr/local/bin/ && \
     chmod +x /usr/local/bin/* && \
-    rm -rf webatlas-pipeline-${WEBATLAS_FORK_TAG}.tar.gz webatlas-pipeline-${WEBATLAS_FORK_TAG}
+    rm -rf ${WEBATLAS_FORK_TAG}.tar.gz webatlas-pipeline-${WEBATLAS_FORK_TAG}
 RUN pip install --upgrade pip "setuptools<81" distlib --no-cache-dir && \
     pip install --no-cache-dir -r /requirements.txt
 
