@@ -59,13 +59,12 @@ def write_spatialdata(
     else:
         raise SystemError("Path to AnnData not .h5ad nor .zarr")
 
-    # ensure index and column match
+    # Use a separate int index for SpatialData and keep the original obs index. Original obs index can be non-numeric, so can not always be converted to int.
     OBS_IDX_NAME = "webatlas_index"
-    adata.obs = adata.obs.reset_index(names=OBS_IDX_NAME)
-    adata.obs[OBS_IDX_NAME] = adata.obs[OBS_IDX_NAME].astype(int)
+    ORIG_IDX_NAME = "original_obs_index"
+    adata.obs = adata.obs.reset_index(names=ORIG_IDX_NAME)
+    adata.obs[OBS_IDX_NAME] = range(len(adata.obs))
     adata.obs = adata.obs.set_index(OBS_IDX_NAME, drop=False)
-    adata.obs.index = adata.obs[OBS_IDX_NAME]
-    adata.obs.index.name = OBS_IDX_NAME
 
     # ensure library_id in obs
     if "library_id" not in adata.obs:

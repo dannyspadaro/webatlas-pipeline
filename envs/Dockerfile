@@ -1,6 +1,6 @@
 FROM python:3.10-bookworm
 ARG BIOFORMATS2RAW="0.7.0"
-ARG WEBATLAS_FORK_TAG="0.5.3-galaxy3"
+ARG WEBATLAS_FORK_TAG="0.5.3-galaxy4"
 
 COPY ./requirements.txt /requirements.txt
 RUN apt-get update && \
